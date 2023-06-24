@@ -21,7 +21,17 @@ fn main() {
         .load_file(Path::new("src/pages/index.js"))
         .expect("failed to load file");
 
-    let result = compiler.process_js_with_custom_pass(fm, None, &handler, &Options {
-        ..Default::default()
-    }, Default::default(), |_| noop(), |_| noop()).expect("Failed to compile");
+    let _result = compiler
+        .process_js_with_custom_pass(
+            fm,
+            None,
+            &handler,
+            &Options {
+                ..Default::default()
+            },
+            Default::default(),
+            |_| noop(),
+            |_| noop(),
+        )
+        .expect("Failed to compile");
 }

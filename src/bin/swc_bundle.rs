@@ -1,27 +1,28 @@
+use anyhow::Error;
 use std::collections::HashMap;
 use std::sync::Arc;
+use swc::atoms::js_word;
 use swc_bundler::{Bundler, Load, ModuleData, ModuleRecord};
-use swc_common::{FileName, SourceMap, Span};
+use swc_common::errors::{ColorConfig, Handler};
 use swc_common::sync::Lrc;
+use swc_common::{FileName, SourceMap, Span};
+use swc_ecma_ast::*;
 use swc_ecma_loader::resolvers::lru::CachingResolver;
 use swc_ecma_loader::resolvers::node::NodeModulesResolver;
 use swc_ecma_loader::TargetEnv;
-use anyhow::Error;
-use swc::atoms::js_word;
-use swc_common::errors::{ColorConfig, Handler};
-use swc_ecma_parser::{parse_file_as_module, Syntax, with_file_parser};
-use swc_ecma_ast::*;
+use swc_ecma_parser::{parse_file_as_module, Syntax};
 
-fn main(){
+fn main() {
     let cm = Arc::<SourceMap>::default();
-    let entries = HashMap::from([
-        (String::from("index"), FileName::Real("./js-fixtures/index.js".into()))
-    ]);
+    let entries = HashMap::from([(
+        String::from("index"),
+        FileName::Real("./js-fixtures/index.js".into()),
+    )]);
     let globals = Box::leak(Box::default());
     let mut bundler = Bundler::new(
         globals,
         cm.clone(),
-        Loader { cm: cm.clone() },
+        Loader { cm },
         CachingResolver::new(
             4096,
             NodeModulesResolver::new(TargetEnv::Node, Default::default(), true),
@@ -65,12 +66,12 @@ impl Load for Loader {
             None,
             &mut vec![],
         )
-            .unwrap_or_else(|err| {
-                let handler =
-                    Handler::with_tty_emitter(ColorConfig::Always, false, false, Some(self.cm.clone()));
-                err.into_diagnostic(&handler).emit();
-                panic!("failed to parse")
-            });
+        .unwrap_or_else(|err| {
+            let handler =
+                Handler::with_tty_emitter(ColorConfig::Always, false, false, Some(self.cm.clone()));
+            err.into_diagnostic(&handler).emit();
+            panic!("failed to parse")
+        });
 
         Ok(ModuleData {
             fm,
