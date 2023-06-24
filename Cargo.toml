@@ -1,0 +1,16 @@
+[package]
+name = "swc-plugin-rfc"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = "1.0.71"
+swc = "0.263.23"
+swc_bundler = "0.216.20"
+swc_common = { version = "0.31.16", features = ["tty-emitter"] }
+swc_ecma_ast = "0.106.6"
+swc_ecma_loader = "0.43.18"
+swc_ecma_parser = "0.136.7"
+swc_ecma_transforms = "0.220.18"
