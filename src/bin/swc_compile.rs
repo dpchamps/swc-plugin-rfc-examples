@@ -1,16 +1,15 @@
 use glob::glob;
 use std::sync::Arc;
-use std::sync::Mutex;
-use swc::atoms::once_cell::sync::Lazy;
+
 use swc::config::{Config, JscConfig, ModuleConfig};
 use swc::{self, config::Options};
 use swc_common::{
     errors::{ColorConfig, Handler},
     Globals, SourceFile, SourceMap, GLOBALS,
 };
-use swc_ecma_ast::{EsVersion, Ident};
+use swc_ecma_ast::EsVersion;
 use swc_ecma_transforms::pass::noop;
-use swc_ecma_visit::{as_folder, noop_visit_mut_type, VisitMut};
+use swc_ecma_visit::as_folder;
 
 use swc_plugin_rfc_examples::ident_counter::IdentVisitor;
 

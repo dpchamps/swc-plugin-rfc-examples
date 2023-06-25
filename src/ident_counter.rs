@@ -1,13 +1,11 @@
-
 /*
 Toy example of a visitor with module-level state
  */
 
-use std::sync::Mutex;
 use once_cell::sync::Lazy;
+use std::sync::Mutex;
 use swc_ecma_ast::Ident;
 use swc_ecma_visit::{noop_visit_mut_type, VisitMut};
-
 
 /// Toy example of a visitor with module-level state
 
