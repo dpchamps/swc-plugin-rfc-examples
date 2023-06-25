@@ -149,3 +149,4 @@ babel-dist/
 swc-dist/
 swc-compile-dist/
 .idea/
+.swc/
