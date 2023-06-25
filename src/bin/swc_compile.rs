@@ -1,19 +1,22 @@
-use std::{path::Path, sync::Arc};
+use glob::glob;
+use std::sync::Arc;
 use std::sync::Mutex;
-use swc::{self, config::Options};
 use swc::atoms::once_cell::sync::Lazy;
-use swc_common::{errors::{ColorConfig, Handler}, SourceMap, Globals, GLOBALS, SourceFile};
+use swc::config::{Config, JscConfig, ModuleConfig};
+use swc::{self, config::Options};
+use swc_common::{
+    errors::{ColorConfig, Handler},
+    Globals, SourceFile, SourceMap, GLOBALS,
+};
 use swc_ecma_ast::{EsVersion, Ident};
 use swc_ecma_transforms::pass::noop;
 use swc_ecma_visit::{as_folder, noop_visit_mut_type, VisitMut};
-use glob::{glob, GlobError};
-use swc::config::{Config, JscConfig, ModuleConfig};
 
 ///
 
 fn main() {
     let globals = Globals::new();
-    GLOBALS.set(&globals,|| {
+    GLOBALS.set(&globals, || {
         let cm = Arc::<SourceMap>::default();
         let handler = Arc::new(Handler::with_tty_emitter(
             ColorConfig::Auto,
@@ -23,11 +26,14 @@ fn main() {
         ));
         let compiler = swc::Compiler::new(cm.clone());
 
-        let files: Result<Vec<Arc<SourceFile>>, _> = glob("./js-fixtures/*.js").expect("Failed to glob files").into_iter().map(|glob_result| {
-            glob_result.map(|path| {
-                cm.load_file(&path.into_boxed_path())
-            }).expect("Received a glob error")
-        }).collect();
+        let files: Result<Vec<Arc<SourceFile>>, _> = glob("./js-fixtures/*.js")
+            .expect("Failed to glob files")
+            .map(|glob_result| {
+                glob_result
+                    .map(|path| cm.load_file(&path.into_boxed_path()))
+                    .expect("Received a glob error")
+            })
+            .collect();
 
         for fm in files.expect("Failed reading files") {
             compiler
@@ -55,20 +61,18 @@ fn main() {
     });
 }
 
-
 /*
 Toy example of a visitor with module-level state
  */
 
 struct IdentVisitor;
 
-static IDENT_COUNT: Lazy<Mutex<usize>> =
-    Lazy::new(|| Mutex::new(0));
+static IDENT_COUNT: Lazy<Mutex<usize>> = Lazy::new(|| Mutex::new(0));
 
 impl VisitMut for IdentVisitor {
     noop_visit_mut_type!();
 
-    fn visit_mut_ident(&mut self, module: &mut Ident) {
+    fn visit_mut_ident(&mut self, _module: &mut Ident) {
         let mut guard = IDENT_COUNT.lock().expect("Failed to lock");
         println!("{}", *guard);
         *guard += 1;
