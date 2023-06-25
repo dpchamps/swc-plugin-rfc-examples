@@ -1,5 +1,5 @@
 [package]
-name = "swc-plugin-rfc"
+name = "swc_plugin_rfc_examples"
 version = "0.1.0"
 edition = "2021"
 

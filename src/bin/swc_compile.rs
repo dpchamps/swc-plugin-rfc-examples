@@ -12,7 +12,7 @@ use swc_ecma_ast::{EsVersion, Ident};
 use swc_ecma_transforms::pass::noop;
 use swc_ecma_visit::{as_folder, noop_visit_mut_type, VisitMut};
 
-///
+use swc_plugin_rfc_examples::ident_counter::IdentVisitor;
 
 fn main() {
     let globals = Globals::new();
@@ -59,22 +59,4 @@ fn main() {
                 .expect("Failed to compile");
         }
     });
-}
-
-/*
-Toy example of a visitor with module-level state
- */
-
-struct IdentVisitor;
-
-static IDENT_COUNT: Lazy<Mutex<usize>> = Lazy::new(|| Mutex::new(0));
-
-impl VisitMut for IdentVisitor {
-    noop_visit_mut_type!();
-
-    fn visit_mut_ident(&mut self, _module: &mut Ident) {
-        let mut guard = IDENT_COUNT.lock().expect("Failed to lock");
-        println!("{}", *guard);
-        *guard += 1;
-    }
 }
