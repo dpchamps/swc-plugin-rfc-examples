@@ -1,8 +1,8 @@
 {
   "scripts": {
-    "babel": "npx babel ./js-fixtures/*.js -d ./babel-dist",
-    "rust_visitor": "cargo run -p swc_compile -- './js-fixtures/*' ./swc-compile-dist",
-    "swc_plugin": "swc ./js-fixtures -d ./swc-dist"
+    "babel": "npx babel ./js-fixtures/*.js -d ./dist/babel",
+    "rust_visitor": "cargo run -p swc_compile -- './js-fixtures/*' ./dist/swc-compile",
+    "swc_plugin": "swc ./js-fixtures -d ./dist/swc-plugin"
   },
   "devDependencies": {
     "@babel/cli": "^7.22.5",
