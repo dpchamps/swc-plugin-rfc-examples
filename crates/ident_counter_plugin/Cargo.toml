@@ -1,0 +1,21 @@
+[package]
+name = "ident_counter_plugin"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib"]
+
+[profile.release]
+lto = true
+
+[dependencies]
+anyhow = {workspace = true}
+serde = "1"
+ident_counter = {path = "../ident_counter"}
+swc_core = {workspace = true}
+swc_common = {workspace = true, features = ["tty-emitter", "__plugin", "__rkyv"]}
+swc_ecma_ast = {workspace = true}
+swc_ecma_visit = {workspace = true}
+swc_plugin_macro = {workspace = true}
+swc_plugin_proxy = {workspace = true, features=["__plugin_mode"]}

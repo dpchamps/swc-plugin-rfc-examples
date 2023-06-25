@@ -1,11 +1,16 @@
 let identCount = 0;
 
-const identCounter = (filename) => {
-    console.log(`Visiting: ${filename}`);
+const random_id = String(Math.floor(Math.random()*100));
+
+const identCounter = () => {
+    const renamed = new Set();
     return {
         visitor: {
-            Identifier() {
-                console.log(identCount += 1)
+            Identifier(nodePath) {
+                if(renamed.has(nodePath.node.name)) return;
+                nodePath.node.name = `${nodePath.node.name}_${random_id}_${identCount}`
+                renamed.add(nodePath.node.name);
+                identCount += 1;
             }
         }
     }

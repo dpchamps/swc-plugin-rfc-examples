@@ -1,0 +1,12 @@
+[package]
+name = "ident_counter"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+once_cell = {workspace = true}
+swc_ecma_ast = {workspace = true}
+swc_ecma_visit = {workspace = true }
+rand = {workspace = true}
